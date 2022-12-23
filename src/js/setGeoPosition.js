@@ -37,8 +37,8 @@ export function userLogin(el) {
 
   ok.addEventListener('click', (e) => {
     e.preventDefault();
-    checkGeoPos(ok, form, container, el.querySelector('.login_input').value);
-    if (!checkGeoPos(ok, form, container, el.querySelector('.login_input').value)) {
+    checkGeoPos(form, container, el.querySelector('.login_input').value);
+    if (!checkGeoPos(form, container, el.querySelector('.login_input').value)) {
       showError(document.querySelector('.timeline'));
     }
   }); 
@@ -50,17 +50,18 @@ export function userLogin(el) {
   });
 }
 
-export function checkGeoPos(ok, form, container, coord) {
+export function matchGeoPos(coord) {
   if (!(/^\s+$/.test(coord)) 
     && coord !== '' 
-    && /^[-]?([1-8]?\d(\.\d+)?|90(\.0+)?), \s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/gm.test(coord)) {
-      document.querySelector('[data-id="geo-coord"]').textContent = coord;
-      if (!form) return;
-      form.remove();
-      container.remove();
-      return true;
-  } else {
-    return false;
+    && /^[-]?([1-8]?\d(\.\d+)?|90(\.0+)?), \s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/gm.test(coord)) return true
+  return false;
+}
+
+function checkGeoPos(form, container, coord) {
+  if (matchGeoPos(coord)) {
+    document.querySelector('[data-id="geo-coord"]').textContent = coord;
+    form.remove();
+    container.remove();    
   }
 }
 
